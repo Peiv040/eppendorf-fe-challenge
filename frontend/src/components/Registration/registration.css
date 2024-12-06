@@ -1,0 +1,13 @@
+#registration form {
+    position: absolute;
+    max-width: 500px;
+    padding: 1.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#registration form > * {
+    width: 100%;
+    margin: 1.5rem 0;
+}
