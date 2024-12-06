@@ -1,0 +1,18 @@
+{
+    "welcome": {
+        "title": "Welcome"
+    },
+    "registration": {
+        "title": "Registration",
+        "successMessage": "Registration Successful!",
+        "errors": {
+            "name": "Name must be at least 2 characters",
+            "email": "Invalid email address",
+            "password": "Password must be at least 8 characters long, include an uppercase letter, a number, and a special character"
+        }
+    },
+    "sortableTable": {
+        "title": "Sortable Table"
+    },
+    "loading": "Loading..."
+}
