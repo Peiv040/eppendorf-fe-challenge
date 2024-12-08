@@ -12,5 +12,9 @@
             "password": "Password must be at least 8 characters long, include an uppercase letter, a number, and a special character"
         }
     },
-    "back": "Back"
+    "sortableTable": {
+        "title": "Sortable Table"
+    },
+    "back": "Back",
+    "loading": "Loading..."
 }

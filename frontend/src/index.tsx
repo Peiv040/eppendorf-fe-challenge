@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import Navigation from 'components/Navigation';
 import Welcome from 'components/Welcome';
 import Registration from 'components/Registration';
+import SortableTable from 'components/SortableTable';
 
 import './index.css';
 
@@ -19,6 +20,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Welcome />} />
         <Route path='registration' element={<Registration />} />
+        <Route path='sortableTable' element={<SortableTable />} />
       </Routes>
     </BrowserRouter>
   )

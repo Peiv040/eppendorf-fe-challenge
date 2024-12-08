@@ -1,0 +1,9 @@
+#sortableTable {
+    padding: 20px;
+}
+
+.MuiTableFooter-root {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+}
