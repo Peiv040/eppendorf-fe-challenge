@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 
 import registerRoutes from './register';
+import devicesRoutes from './devices';
 
 const router = express.Router();
 
@@ -10,5 +11,6 @@ router.get("/", (_req: Request, res: Response) => {
 });
 
 router.use("/register", registerRoutes);
+router.use("/devices", devicesRoutes);
 
 export default router
