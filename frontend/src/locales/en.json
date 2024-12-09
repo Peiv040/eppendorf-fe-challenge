@@ -1,0 +1,13 @@
+{
+    "welcome": {
+        "title": "Welcome",
+        "intro": "Welcome to my coding challenge solution! This application features a registration form and a sortable table, designed to demonstrate my skillset. Please select an option below to begin exploring."
+    },
+    "registration": {
+        "title": "Registration"
+    },
+    "sortableTable": {
+        "title": "Sortable Table"
+    },
+    "back": "Back"
+}
