@@ -4,7 +4,14 @@
         "intro": "Welcome to my coding challenge solution! This application features a registration form and a sortable table, designed to demonstrate my skillset. Please select an option below to begin exploring."
     },
     "registration": {
-        "title": "Registration"
+        "title": "Registration",
+        "register": "Register",
+        "successMessage": "Registration Successful!",
+        "errors": {
+            "name": "Name must be at least 2 characters",
+            "email": "Invalid email address",
+            "password": "Password must be at least 8 characters long, include an uppercase letter, a number, and a special character"
+        }
     },
     "sortableTable": {
         "title": "Sortable Table"
