@@ -1,0 +1,13 @@
+#sortableTable {
+    padding: 20px;
+}
+
+#sortableTable .MuiTableHead-root {
+    cursor: pointer;
+}
+
+#sortableTable .MuiTableFooter-root {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+}
