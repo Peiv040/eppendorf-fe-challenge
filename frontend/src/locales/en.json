@@ -16,5 +16,6 @@
     "sortableTable": {
         "title": "Sortable Table"
     },
-    "back": "Back"
+    "back": "Back",
+    "loading": "Loading..."
 }
