@@ -7,7 +7,9 @@
         "title": "Registration",
         "register": "Register",
         "successMessage": "Registration Successful!",
+        "submitting": "Submitting...",
         "errors": {
+            "generic": "An unknown error occurred",
             "name": "Name must be at least 2 characters",
             "email": "Invalid email address",
             "password": "Password must be at least 8 characters long, include an uppercase letter, a number, and a special character"
