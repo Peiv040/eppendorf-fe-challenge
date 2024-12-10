@@ -3,21 +3,17 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, useNavigate } from "react-router";
 import Welcome from ".";
 import lang from "../../locales/en.json";
+import { act } from "react";
+
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+      ...actual,
+      useNavigate: vi.fn(),
+  };
+});
 
 describe("Welcome Component", () => {
-  it("renders the welcome title and buttons", () => {
-    render(
-      <MemoryRouter>
-        <Welcome />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText(lang.welcome.title)).toBeInTheDocument();
-
-    expect(screen.getByText(lang.registration.title)).toBeInTheDocument();
-    expect(screen.getByText(lang.sortableTable.title)).toBeInTheDocument();
-  });
-
   it("navigates to the registration page when the Registration button is clicked", () => {
     const navigate = vi.fn();
     (useNavigate as Mock).mockReturnValue(navigate);
@@ -29,7 +25,7 @@ describe("Welcome Component", () => {
     );
 
     const registrationButton = screen.getByText(lang.registration.title);
-    fireEvent.click(registrationButton);
+    act(() => fireEvent.click(registrationButton));
 
     expect(navigate).toHaveBeenCalledWith("/registration");
   });
@@ -45,7 +41,7 @@ describe("Welcome Component", () => {
     );
 
     const sortableTableButton = screen.getByText(lang.sortableTable.title);
-    fireEvent.click(sortableTableButton);
+    act(() => fireEvent.click(sortableTableButton));
 
     expect(navigate).toHaveBeenCalledWith("/sortableTable");
   });

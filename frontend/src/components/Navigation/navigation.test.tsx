@@ -3,6 +3,15 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router";
 import Navigation from ".";
 
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+      ...actual,
+      useNavigate: vi.fn(),
+      useLocation: vi.fn(),
+  };
+});
+
 describe("Navigation Component", () => {
   const mockNavigate = vi.fn();
 
