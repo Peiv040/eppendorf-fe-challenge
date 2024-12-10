@@ -6,7 +6,7 @@ import Navigation from './components/Navigation';
 
 const Welcome = lazy(() => import('./components/Welcome'));
 const Registration = lazy(() => import('./components/Registration'));
-const SortableTable = lazy(() => import('./components/SortableTable'));
+const Devices = lazy(() => import('./views/Devices'));
 
 import './index.css';
 
@@ -21,7 +21,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Welcome />} />
         <Route path='registration' element={<Registration />} />
-        <Route path='sortableTable' element={<SortableTable />} />
+        <Route path='sortableTable' element={<Devices />} />
       </Routes>
     </BrowserRouter>
   )

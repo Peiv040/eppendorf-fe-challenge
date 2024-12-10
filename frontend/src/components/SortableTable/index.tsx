@@ -7,44 +7,46 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   TableFooter,
   TablePagination,
-  Skeleton,
 } from "@mui/material";
 import { useSortedData } from "../../hooks/useSortedData";
-import { IDevice } from "../../models/Device";
-import { useFetchData } from "../../hooks/useFetchData";
 import { usePaginatedData } from "../../hooks/usePaginatedData";
 import useCalculateRemainingHeight from "../../hooks/useCalculateFullsizeHeight";
-import lang from "../../locales/en.json";
 
 import "./sortableTable.css";
 
-const SortableTable: React.FC = () => {
-  const rowsPerPageOptions = [5, 10, 25, 50, 100];
-  const { data: devices, loading, error } = useFetchData<IDevice[]>(
-    `${import.meta.env.VITE_BACKEND_URL}/devices`
-  );
+interface SortableTableProps<T> {
+  data: T[];
+  columns: { key: keyof T; label: string }[];
+  rowsPerPageOptions?: number[];
+  initialSortKey?: keyof T;
+}
 
-  const [sortKey, setSortKey] = useState<keyof IDevice>("id");
+const SortableTable = <T,>({
+  data,
+  columns,
+  rowsPerPageOptions = [5, 10, 25, 50, 100],
+  initialSortKey,
+}: SortableTableProps<T>): React.ReactElement => {
+  const [sortKey, setSortKey] = useState<keyof T | null>(initialSortKey || null);
   const [ascending, setAscending] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const tableHeight = useCalculateRemainingHeight(tableContainerRef, [loading], 500);
+  const tableHeight = useCalculateRemainingHeight(tableContainerRef, [data], 500);
 
   // Should happen in the backend
-  const sortedDevices = useSortedData(devices || [], sortKey, ascending);
+  const sortedData = useSortedData<T>(data, sortKey, ascending);
   // Should happen in the backend
-  const paginatedDevices = usePaginatedData(
-    sortedDevices,
+  const paginatedData = usePaginatedData<T>(
+    sortedData,
     currentPage,
     rowsPerPage
   );
 
-  const handleSort = (key: keyof IDevice) => {
+  const handleSort = (key: keyof T) => {
     setSortKey(key);
     setAscending((prev) => (key === sortKey ? !prev : true));
   };
@@ -58,72 +60,63 @@ const SortableTable: React.FC = () => {
     setCurrentPage(0); // Reset to first page when rows-per-page changes
   };
 
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
-
   return (
-    <main id="sortableTable">
-      <Typography variant="h4" gutterBottom>
-        {lang.sortableTable.title}
-      </Typography>
+    <TableContainer
+      className="sortableTable"
+      component={Paper}
+      style={{ maxHeight: `${tableHeight}px` }}
+      ref={tableContainerRef}
+    >
+      <Table stickyHeader aria-label="sortable table">
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell
+                key={String(column.key)}
+                onClick={() => handleSort(column.key)}
+                aria-sort={
+                  sortKey === column.key
+                    ? ascending
+                      ? "ascending"
+                      : "descending"
+                    : undefined
+                }
+                className="sortable-header"
+              >
+                {column.label} {sortKey === column.key && (ascending ? "↑" : "↓")}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
 
-      {loading ? (
-        <Skeleton variant="rectangular" height={tableHeight} data-testid="skeleton" />
-      ) : (
-        <TableContainer
-          component={Paper}
-          style={{ maxHeight: `${tableHeight}px` }}
-          ref={tableContainerRef}
-        >
-          <Table stickyHeader aria-label="sortable table">
-            <TableHead>
-              <TableRow>
-                {devices && devices?.length > 0 &&
-                  Object.keys(devices[0]).map((key) => (
-                    <TableCell
-                      key={key}
-                      onClick={() => handleSort(key as keyof IDevice)}
-                      aria-sort={
-                        sortKey === key
-                          ? ascending
-                            ? "ascending"
-                            : "descending"
-                          : undefined
-                      }
-                      className="sortable-header"
-                    >
-                      {key.replace(/_/g, " ").toUpperCase()}{" "}
-                      {sortKey === key && (ascending ? "↑" : "↓")}
-                    </TableCell>
-                  ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedDevices.map((device) => (
-                <TableRow key={device.id}>
-                  {Object.values(device).map((value, index) => (
-                    <TableCell key={index}>{value}</TableCell>
-                  ))}
-                </TableRow>
+        <TableBody>
+          {paginatedData.map((entry, index) => (
+            <TableRow key={index}>
+              {columns.map((column) => (
+                <TableCell key={String(column.key)}>
+                  {entry[column.key] !== undefined && entry[column.key] !== null
+                    ? String(entry[column.key])
+                    : ""}
+                </TableCell>
               ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={rowsPerPageOptions}
-                  count={sortedDevices.length}
-                  rowsPerPage={rowsPerPage}
-                  page={currentPage}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      )}
-    </main>
+            </TableRow>
+          ))}
+        </TableBody>
+
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={rowsPerPageOptions}
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={currentPage}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
   );
 };
 

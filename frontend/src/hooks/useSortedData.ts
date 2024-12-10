@@ -1,11 +1,10 @@
 import { useMemo } from "react";
-import { IDevice } from "../models/Device";
 
-export const useSortedData = (
-  data: IDevice[],
-  sortKey: keyof IDevice,
+export const useSortedData = <T,>(
+  data: T[],
+  sortKey: keyof T | null,
   ascending: boolean
-) => {
+): T[] => {
   return useMemo(() => {
     if (!sortKey) return data;
 
