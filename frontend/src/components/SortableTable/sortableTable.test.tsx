@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import SortableTable from ".";
-
-global.fetch = vi.fn();
+import * as useFetchDataModule from "../../hooks/useFetchData";
 
 const mockDevices = [
   { id: 1, location: "Room A", type: "pipette", device_health: "good", last_used: "2024-12-01", price: "10.00", color: "#FFFFFF" },
@@ -13,15 +12,29 @@ const mockDevices = [
   { id: 6, location: "Room F", type: "shaker", device_health: "good", last_used: "2024-11-15", price: "500.00", color: "#FFFFFF" },
 ];
 
+vi.mock("../../hooks/useFetchData");
+
 describe("SortableTable Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  it("renders skeleton while data is loading", async () => {
+    (useFetchDataModule.useFetchData as Mock).mockReturnValue({
+      data: null,
+      loading: true,
+      error: null,
+    });
+
+    render(<SortableTable />);
+    expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+  });
+
   it("renders devices correctly after data is loaded", async () => {
-    (fetch as Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockDevices,
+    (useFetchDataModule.useFetchData as Mock).mockReturnValue({
+      data: mockDevices,
+      loading: false,
+      error: null,
     });
 
     render(<SortableTable />);
@@ -30,8 +43,12 @@ describe("SortableTable Component", () => {
   });
 
   it("displays an error message if fetching devices fails", async () => {
-    (fetch as Mock).mockResolvedValueOnce({
-      ok: false,
+    const errorMsg = "Unable to fetch devices. Please try again later.";
+
+    (useFetchDataModule.useFetchData as Mock).mockReturnValue({
+      data: null,
+      loading: false,
+      error: errorMsg,
     });
 
     render(<SortableTable />);
@@ -41,9 +58,10 @@ describe("SortableTable Component", () => {
   });
 
   it("sorts devices by a column when a header is clicked", async () => {
-    (fetch as Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => [...mockDevices].reverse(),
+    (useFetchDataModule.useFetchData as Mock).mockReturnValue({
+      data: [...mockDevices].reverse(),
+      loading: false,
+      error: null,
     });
 
     render(<SortableTable />);

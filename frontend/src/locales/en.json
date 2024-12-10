@@ -18,6 +18,7 @@
     "sortableTable": {
         "title": "Sortable Table"
     },
+    "failedToFetchData": "Failed to fetch data",
     "back": "Back",
     "loading": "Loading..."
 }
